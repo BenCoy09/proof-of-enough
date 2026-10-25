@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Proof of Enough: prove enough, reveal nothing else</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#eceff2;--surf:#f8f9fa;--ink:#0f1720;--mute:#58636f;--rule:#c9d0d8;--mark:#1f3fff;--bad:#b3261e;--ok:#0b6b3a;--bar:#0f1720;--serif:"Instrument Serif",Georgia,"Times New Roman",serif;--sans:Geist,system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"Geist Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--paper:#0d1218;--surf:#141b23;--ink:#e8ecf0;--mute:#98a3ae;--rule:#28313b;--mark:#8ea1ff;--bad:#ff8a80;--ok:#5fd596;--bar:#e8ecf0}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 17px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+.w{max-width:1080px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
+header{display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:22px 0;border-bottom:1px solid var(--rule)}
+.logo{font:400 24px/1 var(--serif);text-decoration:none}
+header span{color:var(--mute);font-size:14px}
+.hero{padding:64px 0 56px}
+h1{font:400 clamp(46px,9vw,104px)/.96 var(--serif);letter-spacing:-.02em;margin:0 0 28px}
+.lede{max-width:56ch;font-size:19px;color:var(--mute);margin:0}
+.lede b{color:var(--ink);font-weight:500}
+.doc{background:var(--surf);border:1px solid var(--rule);border-radius:4px;margin-top:44px}
+.bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--rule)}
+.bar strong{font-weight:500}
+.seg{display:flex;border:1px solid var(--ink);border-radius:4px;overflow:hidden}
+.seg button{font:500 14px var(--sans);padding:9px 14px;border:0;background:transparent;color:var(--ink);cursor:pointer;margin:0}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.led{padding:6px 18px 10px;font:400 13px/1 var(--mono)}
+.r{position:relative;display:grid;grid-template-columns:104px 44px 1fr 1fr;gap:12px;padding:13px 0;border-bottom:1px dashed var(--rule)}
+.r:last-child{border:0}
+.r.t{font-weight:500;font-size:14px}
+.r i{font-style:normal;color:var(--mute)}
+.r::after{content:"";position:absolute;left:-4px;right:-4px;top:5px;bottom:5px;background:var(--bar);transform:scaleX(0);transform-origin:left;transition:transform .55s cubic-bezier(.7,0,.2,1);transition-delay:calc(var(--i)*45ms)}
+.sealed .r::after{transform:scaleX(1)}
+.verdict{padding:14px 18px;border-top:1px solid var(--rule);font-size:15px}
+.fine{color:var(--mute);font-size:13px;margin:12px 2px 0}
+section{padding:68px 0;border-top:1px solid var(--rule)}
+h2{font:400 clamp(32px,5vw,52px)/1.05 var(--serif);letter-spacing:-.01em;margin:0 0 14px;max-width:22ch}
+.sub{color:var(--mute);max-width:62ch;margin:0 0 30px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pane{background:var(--surf);border:1px solid var(--rule);border-radius:4px;padding:18px;min-width:0}
+.pane h3{font:500 18px var(--sans);margin:0 0 2px}
+.who{color:var(--mute);font-size:14px;margin:0 0 14px}
+label{display:block;font-size:14px;color:var(--mute);margin:12px 0 4px}
+input,select{font:500 14px var(--mono);color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:3px;padding:8px;width:100%}
+button.b{font:500 14px var(--sans);padding:10px 14px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:4px;cursor:pointer;margin:16px 8px 0 0}
+button.b.g{background:transparent;color:var(--ink)}
+.out{margin-top:16px;font-size:14px;overflow-wrap:anywhere}
+.out p{margin:0 0 8px}
+.kv{font:400 13px/1.5 var(--mono);padding:8px 0;border-top:1px solid var(--rule)}
+.ok{color:var(--ok);font-weight:500}.bad{color:var(--bad);font-weight:500}.mu{color:var(--mute)}
+.ban{border:1px solid var(--bad);color:var(--bad);padding:10px 12px;border-radius:4px;font-size:14px;margin-bottom:14px}
+.not{border:1px solid var(--rule);border-radius:4px;padding:10px 14px;margin-top:12px;font-size:14px}
+.not b{font-weight:500}
+.not ul{margin:6px 0 0;padding-left:18px;color:var(--mute)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.two h3{font:500 18px var(--sans);margin:0 0 10px}
+.two ul{margin:0;padding:0;list-style:none}
+.two li{padding:12px 0;border-top:1px solid var(--rule);font-size:16px}
+.two .no li{color:var(--mute)}
+.close{max-width:60ch;margin-top:32px;font:400 24px/1.3 var(--serif)}
+.st{margin:0;padding:0;list-style:none;font-size:15px}
+.st li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--rule)}
+.st b{flex:0 0 92px;font-weight:500}
+.st .d{color:var(--ok)}
+footer{border-top:1px solid var(--rule);padding:28px 0 44px;color:var(--mute);font-size:14px}
+@media (max-width:760px){.cols,.two{grid-template-columns:1fr}.r{grid-template-columns:92px 36px 1fr}.r span:last-child{display:none}.hero{padding-top:40px}section{padding:48px 0}}
+.l{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
+.l span{display:block;transform:translateY(106%);animation:up 1s cubic-bezier(.2,.8,.2,1) forwards}
+.l+.l span{animation-delay:.12s}
+.lede{opacity:0;animation:fi .8s .55s forwards}
+.r>*{opacity:0;animation:fi .4s forwards;animation-delay:calc(.8s + var(--i)*80ms)}
+.claim{max-height:0;overflow:hidden;opacity:0;padding:0 18px;font:500 15px/1.4 var(--mono);transition:max-height .5s .55s,opacity .4s 1s}
+.claim span{display:inline-block;margin:16px 0;background:linear-gradient(color-mix(in srgb,var(--mark) 28%,transparent),color-mix(in srgb,var(--mark) 28%,transparent)) no-repeat 0 90%/0 45%;transition:background-size .7s 1.2s}
+.sealed .claim{max-height:90px;opacity:1;border-top:1px solid var(--rule)}
+.sealed .claim span{background-size:100% 45%}
+.seg button{transition:background .2s,color .2s}
+button.b:active{transform:translateY(1px)}
+.out>*{animation:fi .4s both}
+.out>:nth-child(2){animation-delay:.1s}.out>:nth-child(3){animation-delay:.2s}.out>:nth-child(4){animation-delay:.3s}.out>:nth-child(n+5){animation-delay:.4s}
+.shake{animation:sh .45s}
+@keyframes up{to{transform:none}}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes sh{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+@media (prefers-reduced-motion:reduce){.r::after,.claim,.claim span{transition:none}html{scroll-behavior:auto}.l span,.lede,.r>*,.out>*,.shake{animation:none;opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="w">
+<header><a class="logo" href="#">Proof of Enough</a></header>
+
+<div class="hero">
+<h1><span class="l"><span>Prove enough.</span></span><span class="l"><span>Reveal nothing else.</span></span></h1>
+<p class="lede">A private market is only private until someone has to prove they can pay. Today that means showing the whole portfolio to cover one position. Proof of Enough answers <b>one question</b> instead, and leaves the rest closed.</p>
+<div class="doc" id="doc">
+<div class="bar"><strong>Counterparty: “Show me you can cover a 5,000 ZEC position.”</strong>
+<div class="seg" role="group" aria-label="How you answer"><button id="b1" aria-pressed="true">Hand over the key</button><button id="b2" aria-pressed="false">Send a receipt</button></div></div>
+<div class="led" id="led" aria-label="Holder wallet history"></div>
+<div class="claim" id="cl"><span class="hl">Held at least 5,000 ZEC as of block 3,100,000. Expires in 24 hours.</span></div>
+<div class="verdict bad" id="v" aria-live="polite"></div>
+</div>
+<p class="fine">Sample wallet history, illustrative only. <a href="#demo">Run the real flow below.</a></p>
+</div>
+
+<section id="demo">
+<h2>Close the check without opening the wallet</h2>
+<p class="sub">Both sides run in this page. Only the transport between them is simulated: messages cross as serialized JSON. Notes are read from a frozen wallet export through the interface a real local scanner will have. To see the refusal, ask for more than the fixture holds.</p>
+<div class="cols">
+<div class="pane">
+<h3>Counterparty</h3><p class="who">Wants proof before the trade</p>
+<label for="th">Must hold at least (ZEC)</label><input id="th" type="number" min="0.01" step="any" value="0.5">
+<label for="ht">As of block height</label><input id="ht" type="number" value="4539764">
+<label for="ex">Receipt valid for</label><select id="ex"><option value="60">1 hour</option><option value="1440" selected>24 hours</option><option value="10080">7 days</option></select>
+<button class="b" id="send">Send request</button>
+<div class="out" id="cpout"></div>
+</div>
+<div class="pane">
+<h3>Holder</h3><p class="who">Approves in their own browser</p>
+<p class="mu" style="font-size:13px;margin:0 0 6px">Fixture: <span id="fxs">embedded testnet export, 1 note</span></p>
+<label for="ff">Load a real testnet export (JSON)</label><input id="ff" type="file" accept=".json,application/json">
+<div class="out" id="hpout"><p class="mu">No request yet.</p></div>
+</div>
+</div>
+<p class="fine">Signing uses a key generated in this tab (ECDSA P-256), so signatures are real. Binding that key to a person is not built.</p>
+</section>
+
+<section>
+<h2>What a receipt establishes, and what it doesn’t</h2>
+<div class="two">
+<div><h3>Establishes</h3><ul>
+<li>The referenced transactions were mined at or before that block height. A verifier can confirm this on a testnet explorer without us.</li>
+<li>The holder signed the claim and asserts it.</li>
+<li>The claim stops being valid at the stated time.</li></ul></div>
+<div class="no"><h3>Does not establish</h3><ul>
+<li>That the holder controls those notes.</li>
+<li>The amount held in them.</li>
+<li>That the notes were unspent at that height.</li>
+<li>Anonymity of the notes shown. They reveal which notes the holder points to.</li></ul></div>
+</div>
+<p class="close">A verifier who needs certainty without trusting anyone is asking for a zero-knowledge proof. That is the next build.</p>
+</section>
+
+<section>
+<h2>Build status</h2>
+<ul class="st">
+<li><b class="d">Runs</b><span>Failed-alternative screen</span></li>
+<li><b class="d">Runs</b><span>Request, local approval, signed receipt, signature and expiry check, tamper test</span></li>
+<li><b class="d">Runs</b><span>Refusal when unspent notes at that height fall short</span></li>
+<li><b class="d">Runs</b><span>Real testnet fixture: one note, referenced by transaction id and output index</span></li>
+<li><b>Not built</b><span>Note commitments in receipts, automatic chain lookup, zero-knowledge proof</span></li>
+</ul>
+</section>
+<footer>Proof of Enough. Scoped, expiring selective disclosure for Zcash. The viewing key never leaves the holder’s machine.</footer>
+</div>
+
+<script type="application/json" id="fx">
+{"placeholder":false,"network":"testnet","exported_at":"2026-10-25","notes":[{"ref":"08939ff28196c7509e9ca2c000819a2a897e9eb585f73b81f253de38f3d5c4f3:0","value_zat":100000000,"height":4539096,"spent_height":null,"pool":"ironwood"}]}
+</script>
+
+<script>
+var ZAT=1e8,$=function(i){return document.getElementById(i)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function fmt(z){return (z/ZAT).toLocaleString(undefined,{maximumFractionDigits:8})}
+
+/* Failed alternative */
+var rows=[["2025-11-02","IN","12.40 ZEC","payroll"],["2025-12-19","OUT","3.10 ZEC","rent"],["2026-01-07","IN","2,240.00 ZEC","OTC sale"],["2026-02-14","OUT","0.85 ZEC","dinner"],["2026-03-30","OUT","18.00 ZEC","medical"],["2026-05-21","IN","3,555.25 ZEC","transfer"],["2026-07-08","OUT","9.90 ZEC","unknown address"]];
+var h='<div class="r t" style="--i:0"><span>Balance</span><span></span><span>5,812.40 ZEC</span><span>7 transactions</span></div>';
+rows.forEach(function(r,i){h+='<div class="r" style="--i:'+(i+1)+'"><span>'+r[0]+'</span><i>'+r[1]+'</i><span>'+r[2]+'</span><span>'+r[3]+'</span></div>'});
+$("led").innerHTML=h;
+function mode(s){
+ $("doc").classList.toggle("sealed",s);
+ $("b1").setAttribute("aria-pressed",!s);$("b2").setAttribute("aria-pressed",s);
+ $("v").className="verdict"+(s?"":" bad");
+ $("v").textContent=s?"The counterparty sees one claim and nothing else. The flow below does exactly that.":"The counterparty sees the balance, every transaction and every address you dealt with. This cannot be undone.";
+}
+$("b1").onclick=function(){mode(false)};$("b2").onclick=function(){mode(true)};mode(false);
+var touched=false;["b1","b2"].forEach(function(i){$(i).addEventListener("click",function(){touched=true})});
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches)setTimeout(function(){if(!touched)mode(true)},4300);
+
+/* Fixture: strict. Spent status must be recorded, never inferred. */
+function check(f){
+ if(!f||typeof f.network!=="string"||!Array.isArray(f.notes)||!f.notes.length)throw new Error("Fixture needs a network string and a non-empty notes array.");
+ f.notes.forEach(function(n,i){var w="Note "+(i+1)+": ";
+  if(typeof n.ref!=="string")throw new Error(w+"ref is missing (transaction id:output index).");
+  if(!Number.isInteger(n.value_zat)||n.value_zat<=0)throw new Error(w+"value_zat must be a positive integer.");
+  if(!Number.isInteger(n.height))throw new Error(w+"height is missing.");
+  if(!("spent_height" in n)||!(n.spent_height===null||Number.isInteger(n.spent_height)))throw new Error(w+"spent_height must be present: the block it was spent at, or null if unspent. The demo will not guess.")});
+ return f}
+function isPh(f){return f.placeholder===true||f.notes.some(function(n){return !/^[0-9a-f]{64}:\d+$/i.test(n.ref)})}
+var fx=check(JSON.parse($("fx").textContent));
+/* Scanner interface: a real local scanner must return this same shape. */
+var scanner={getNotes:function(){return Promise.resolve(fx)}};
+$("ff").onchange=function(e){var f=e.target.files[0];if(!f)return;
+ var rd=new FileReader();rd.onload=function(){try{fx=check(JSON.parse(rd.result));$("fxs").textContent=f.name+" ("+fx.notes.length+" notes"+(isPh(fx)?", placeholder values":"")+")";
+  $("ht").value=Math.max.apply(null,fx.notes.map(function(n){return n.height}));$("hpout").innerHTML='<p class="mu">Fixture loaded. Block height set to the newest note.</p>'}
+  catch(x){$("hpout").innerHTML='<p class="bad">'+esc(x.message)+'</p>'}};rd.readAsText(f)};
+
+/* Mocked transport: messages cross as JSON strings. */
+var transport={h:{},on:function(to,f){this.h[to]=f},send:function(to,m){var s=JSON.stringify(m);setTimeout(function(){transport.h[to](JSON.parse(s))},300)}};
+var keys,b64=function(b){return btoa(String.fromCharCode.apply(null,new Uint8Array(b)))},unb64=function(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0)})};
+var ready=crypto.subtle.generateKey({name:"ECDSA",namedCurve:"P-256"},true,["sign","verify"]).then(function(k){keys=k});
+function canon(c){return new TextEncoder().encode(JSON.stringify([c.v,c.network,c.threshold_zat,c.as_of_height,c.issued_at,c.expires_at,c.commitments]))}
+
+/* Holder */
+transport.on("holder",function(req){
+ var o=$("hpout");o.innerHTML='<p class="mu">Reading notes locally…</p>';
+ scanner.getNotes().then(function(f){
+  var ok=f.notes.filter(function(n){return n.height<=req.as_of_height&&(n.spent_height===null||n.spent_height>req.as_of_height)}).sort(function(a,b){return b.value_zat-a.value_zat});
+  var sum=0,pick=[];for(var i=0;i<ok.length&&sum<req.threshold_zat;i++){pick.push(ok[i]);sum+=ok[i].value_zat}
+  var ph=isPh(f),t=(ph?'<div class="ban">Placeholder fixture. These notes are not on chain. Load a real testnet export before showing a judge.</div>':'')+
+  '<p><b>Request:</b> held at least '+fmt(req.threshold_zat)+' ZEC at block '+req.as_of_height+'</p><p class="mu">Read locally from the fixture. The viewing key was not used or sent.</p>';
+  if(sum<req.threshold_zat){o.innerHTML=t+'<p class="bad">Refused. Your notes unspent at block '+req.as_of_height+' total '+fmt(sum)+' ZEC. Signing this would be false.</p>';return}
+  o.innerHTML=t+'<p><b>The verifier will learn:</b></p><div class="kv">'+pick.map(function(n){return esc(n.ref)}).join("<br>")+'</div><p class="mu">This claim and '+pick.length+' note reference(s). Not your amounts, balance or history.</p><button class="b" id="ap">Approve and sign</button><button class="b g" id="dc">Decline</button>';
+  $("dc").onclick=function(){o.innerHTML='<p class="mu">Declined. Nothing was sent.</p>'};
+  $("ap").onclick=function(){ready.then(function(){
+   var now=Date.now(),c={v:1,network:f.network,threshold_zat:req.threshold_zat,as_of_height:req.as_of_height,issued_at:now,expires_at:now+req.valid_minutes*60000,commitments:pick.map(function(n){return n.ref})};
+   return crypto.subtle.sign({name:"ECDSA",hash:"SHA-256"},keys.privateKey,canon(c)).then(function(sig){
+    return crypto.subtle.exportKey("jwk",keys.publicKey).then(function(pub){o.insertAdjacentHTML("beforeend",'<p class="ok">Receipt sent.</p>');transport.send("verifier",{claim:c,sig:b64(sig),pub:pub,placeholder:ph})})})})};
+ }).catch(function(e){o.innerHTML='<p class="bad">'+esc(e.message)+'</p>'});
+});
+
+/* Verifier: states only what it can check. */
+function verify(r){
+ return crypto.subtle.importKey("jwk",r.pub,{name:"ECDSA",namedCurve:"P-256"},false,["verify"]).then(function(k){
+  return crypto.subtle.verify({name:"ECDSA",hash:"SHA-256"},k,unb64(r.sig),canon(r.claim))}).then(function(v){
+  var c=r.claim,exp=Date.now()>c.expires_at;
+  $("cpout").innerHTML=(r.placeholder?'<div class="ban">References come from a placeholder fixture.</div>':'')+
+  '<p class="'+(v?"ok":"bad shake")+'">Signature: '+(v?"valid for this exact claim":"invalid. The claim was altered after signing.")+'</p>'+
+  '<p class="'+(exp?"bad":"ok")+'">Expiry: '+(exp?"expired":"valid until "+new Date(c.expires_at).toLocaleString())+'</p>'+
+  (v?'<p><b>The holder asserts</b> these notes cover at least '+fmt(c.threshold_zat)+' ZEC as of block '+c.as_of_height+'.</p>':'<p class="bad"><b>Rejected.</b> This claim does not match what the holder signed. Do not rely on it.</p>')+'<div class="kv">'+c.commitments.map(esc).join("<br>")+'</div>'+
+  '<div class="not"><b>What this page did not check</b><ul><li>That the notes cover the amount. Amounts are hidden from you.</li><li>That the holder controls the notes.</li><li>That the notes were unspent at that height.</li><li>That the transactions exist on chain. Look up each transaction id on a testnet explorer.</li><li>Who the signing key belongs to.</li></ul></div>'+
+  '<button class="b g" id="tp">Tamper with the claim</button>';
+  $("tp").onclick=function(){var t=JSON.parse(JSON.stringify(r));t.claim.threshold_zat*=10;verify(t)};
+ });
+}
+transport.on("verifier",verify);
+$("send").onclick=function(){
+ var th=Math.round(parseFloat($("th").value)*ZAT),ht=parseInt($("ht").value,10);
+ if(!(th>0)||!(ht>0)){$("cpout").innerHTML='<p class="bad">Enter an amount and a block height.</p>';return}
+ $("cpout").innerHTML='<p class="mu">Request sent. Waiting for the holder…</p>';
+ transport.send("holder",{threshold_zat:th,as_of_height:ht,valid_minutes:parseInt($("ex").value,10)});
+};
+</script>
+</body>
+</html>
