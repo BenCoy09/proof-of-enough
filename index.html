@@ -97,10 +97,10 @@ button.b:active{transform:translateY(1px)}
 <h1><span class="l"><span>Prove enough.</span></span><span class="l"><span>Reveal nothing else.</span></span></h1>
 <p class="lede">A private market is only private until someone has to prove they can pay. Today that means showing the whole portfolio to cover one position. Proof of Enough answers <b>one question</b> instead, and leaves the rest closed.</p>
 <div class="doc" id="doc">
-<div class="bar"><strong>Counterparty: “Show me you can cover a 5,000 ZEC position.”</strong>
+<div class="bar"><strong>Counterparty: “Show me you can cover a 0.5 ZEC position.”</strong>
 <div class="seg" role="group" aria-label="How you answer"><button id="b1" aria-pressed="true">Hand over the key</button><button id="b2" aria-pressed="false">Send a receipt</button></div></div>
 <div class="led" id="led" aria-label="Holder wallet history"></div>
-<div class="claim" id="cl"><span class="hl">Held at least 5,000 ZEC as of block 3,100,000. Expires in 24 hours.</span></div>
+<div class="claim" id="cl"><span class="hl">Held at least 0.5 ZEC as of block 4,539,764. Expires in 24 hours.</span></div>
 <div class="verdict bad" id="v" aria-live="polite"></div>
 </div>
 <p class="fine">Sample wallet history, illustrative only. <a href="#demo">Run the real flow below.</a></p>
@@ -129,19 +129,8 @@ button.b:active{transform:translateY(1px)}
 </section>
 
 <section>
-<h2>What a receipt establishes, and what it doesn’t</h2>
-<div class="two">
-<div><h3>Establishes</h3><ul>
-<li>The referenced transactions were mined at or before that block height. A verifier can confirm this on a testnet explorer without us.</li>
-<li>The holder signed the claim and asserts it.</li>
-<li>The claim stops being valid at the stated time.</li></ul></div>
-<div class="no"><h3>Does not establish</h3><ul>
-<li>That the holder controls those notes.</li>
-<li>The amount held in them.</li>
-<li>That the notes were unspent at that height.</li>
-<li>Anonymity of the notes shown. They reveal which notes the holder points to.</li></ul></div>
-</div>
-<p class="close">A verifier who needs certainty without trusting anyone is asking for a zero-knowledge proof. That is the next build.</p>
+<h2>What a receipt proves</h2>
+<p class="close" style="margin-top:0">It shows the referenced transactions were mined by that block height, and that the holder signed the claim. A verifier who needs more than that is asking for a zero-knowledge proof, and that is the next build.</p>
 </section>
 
 <section>
@@ -167,8 +156,8 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;
 function fmt(z){return (z/ZAT).toLocaleString(undefined,{maximumFractionDigits:8})}
 
 /* Failed alternative */
-var rows=[["2025-11-02","IN","12.40 ZEC","payroll"],["2025-12-19","OUT","3.10 ZEC","rent"],["2026-01-07","IN","2,240.00 ZEC","OTC sale"],["2026-02-14","OUT","0.85 ZEC","dinner"],["2026-03-30","OUT","18.00 ZEC","medical"],["2026-05-21","IN","3,555.25 ZEC","transfer"],["2026-07-08","OUT","9.90 ZEC","unknown address"]];
-var h='<div class="r t" style="--i:0"><span>Balance</span><span></span><span>5,812.40 ZEC</span><span>7 transactions</span></div>';
+var rows=[["2025-11-02","IN","0.0124 ZEC","payroll"],["2025-12-19","OUT","0.0031 ZEC","rent"],["2026-01-07","IN","2.24 ZEC","OTC sale"],["2026-02-14","OUT","0.00085 ZEC","dinner"],["2026-03-30","OUT","0.018 ZEC","medical"],["2026-05-21","IN","3.55525 ZEC","transfer"],["2026-07-08","OUT","0.0099 ZEC","unknown address"]];
+var h='<div class="r t" style="--i:0"><span>Balance</span><span></span><span>5.7758 ZEC</span><span>7 transactions</span></div>';
 rows.forEach(function(r,i){h+='<div class="r" style="--i:'+(i+1)+'"><span>'+r[0]+'</span><i>'+r[1]+'</i><span>'+r[2]+'</span><span>'+r[3]+'</span></div>'});
 $("led").innerHTML=h;
 function mode(s){
